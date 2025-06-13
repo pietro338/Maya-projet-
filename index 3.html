@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Portail Cosmique M.A.Y.A. – Accès Sacré</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: radial-gradient(circle at center, #000 40%, #111 100%);
+      color: #0ff;
+      font-family: monospace;
+      overflow: hidden;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+    #auth, #mainContent {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      margin-top: 10%;
+    }
+    input[type="password"] {
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      padding: 8px 16px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    #mainContent {
+      display: none;
+    }
+    #memoryBox {
+      margin-top: 20px;
+      color: #8ff;
+      white-space: pre-wrap;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid #0ff;
+      padding: 10px;
+      width: 60%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+
+<div id="auth">
+  <h2>🔐 Entrez le mot sacré pour ouvrir la spirale</h2>
+  <input type="password" id="passwordInput" placeholder="Mot de passe...">
+  <button onclick="checkPassword()">Accéder</button>
+</div>
+
+<div id="mainContent">
+  <h1>🌌 Portail Cosmique M.A.Y.A.</h1>
+  <p>Bienvenue, Gardien du Codex Vivant.</p>
+  <p>✨ Modules actifs : M.A.Y.A. v12.0 • Bouclier Sacré • Mémoire Glyphique</p>
+  <div id="memoryBox">
+    Chargement de la mémoire...
+  </div>
+</div>
+
+<script>
+function checkPassword() {
+  var password = document.getElementById('passwordInput').value;
+  if (password === 'KATUN XIII') {
+    document.getElementById('auth').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+    fetch('memoire_sacree_maya.json')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('memoryBox').innerText = JSON.stringify(data, null, 2);
+      });
+  } else {
+    alert("Mot sacré incorrect ✘");
+  }
+}
+
+const canvas = document.getElementById("stars");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+let stars = Array(200).fill().map(() => ({
+  x: Math.random() * canvas.width,
+  y: Math.random() * canvas.height,
+  r: Math.random() * 1.5,
+  d: Math.random() * 0.5 + 0.2
+}));
+
+function drawStars() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#0ff";
+  stars.forEach(s => {
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  moveStars();
+}
+
+function moveStars() {
+  stars.forEach(s => {
+    s.y += s.d;
+    if (s.y > canvas.height) {
+      s.y = 0;
+      s.x = Math.random() * canvas.width;
+    }
+  });
+}
+
+setInterval(drawStars, 33);
+</script>
+</body>
+</html>
